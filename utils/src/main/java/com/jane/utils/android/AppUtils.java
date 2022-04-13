@@ -3,6 +3,11 @@ package com.jane.utils.android;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
+import com.jane.utils.xj.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -58,4 +63,93 @@ public class AppUtils {
         }
         throw new NullPointerException("u should init first");
     }
+
+    /**
+     * 获取 App 名称
+     * Return the application's name.
+     *
+     * @return the application's name
+     */
+    public static String getAppName() {
+        return getAppName(getApp().getPackageName());
+    }
+
+    /**
+     * 获取 App 名称
+     * Return the application's name.
+     *
+     * @param packageName The name of the package.
+     * @return the application's name
+     */
+    public static String getAppName(final String packageName) {
+        if (StringUtils.isSpace(packageName)) return "";
+        try {
+            PackageManager pm = getApp().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(packageName, 0);
+            return pi == null ? null : pi.applicationInfo.loadLabel(pm).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     * 获取 App 版本号
+     * Return the application's version name.
+     *
+     * @return the application's version name
+     */
+    public static String getAppVersionName() {
+        return getAppVersionName(getApp().getPackageName());
+    }
+
+    /**
+     * 获取 App 版本号
+     * Return the application's version name.
+     *
+     * @param packageName The name of the package.
+     * @return the application's version name
+     */
+    public static String getAppVersionName(final String packageName) {
+        if (StringUtils.isSpace(packageName)) return "";
+        try {
+            PackageManager pm = getApp().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(packageName, 0);
+            return pi == null ? null : pi.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     * 获取 App 版本码
+     * Return the application's version code.
+     *
+     * @return the application's version code
+     */
+    public static int getAppVersionCode() {
+        return getAppVersionCode(getApp().getPackageName());
+    }
+
+    /**
+     * 获取 App 版本码
+     * Return the application's version code.
+     *
+     * @param packageName The name of the package.
+     * @return the application's version code
+     */
+    public static int getAppVersionCode(final String packageName) {
+        if (StringUtils.isSpace(packageName)) return -1;
+        try {
+            PackageManager pm = getApp().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(packageName, 0);
+            return pi == null ? -1 : pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+
 }
